@@ -42,6 +42,7 @@ class User:
         self.__id = -1
         cursor.close()
         return True
+<<<<<<< HEAD
 
     @staticmethod
     def load_all_users(cursor):
@@ -72,3 +73,5 @@ class User:
             return loaded_user
         else:
             return None
+=======
+>>>>>>> b9a17e2e041f668c73bd75ea26f76af4182046b7
