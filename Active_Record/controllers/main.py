@@ -1,4 +1,4 @@
-from models.user import User
+from user import User
 from connect_db import create_connection
 from hash_password import generate_salt
 
