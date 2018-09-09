@@ -24,3 +24,15 @@ class User(object):
     #password_hash missing
     def set_password(self, password, salt):
         self.__hashed_password = password_hash(password, salt)
+
+    def save_to_db(self, cursor):
+        if self.__id == -1:
+            ...
+        else:
+            sql = """UPDATE Users SET username=%s, email=%s, hashed_password=%s,
+                    WHERE id=%s"""
+            values = (self.username, self.email, self.hashed_password, self.id)
+            cursor.execute(sql, values)
+            return True
+
+
