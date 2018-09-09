@@ -9,7 +9,6 @@ class User:
 
     def __init__(self):
         self.__id = -1
-
         self.username = ""
         self.email = ""
         self.__hashed_password = ""
@@ -28,12 +27,18 @@ class User:
 
     def save_to_db(self, cursor):
         if self.__id == -1:
-            ...
+            pass
         else:
-            sql = """UPDATE Users SET username=%s, email=%s, hashed_password=%s,
+            sql = """UPDATE Users SET username=%s, email=%s, password=%s,
                     WHERE id=%s"""
             values = (self.username, self.email, self.hashed_password, self.id)
             cursor.execute(sql, values)
+            cursor.close()
             return True
 
-
+    def delete(self, cursor):
+        sql = "DELETE FROM Users WHERE id=%s"
+        cursor.execute(sql, (self.__id,))
+        self.__id = -1
+        cursor.close()
+        return True
