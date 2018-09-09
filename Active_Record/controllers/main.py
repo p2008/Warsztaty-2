@@ -12,5 +12,10 @@ if __name__ == '__main__':
     cnx = create_connection('exam2')
     cursor = cnx.cursor()
 
-    user_obj.save_to_db(cursor)
+    # user_obj.save_to_db(cursor)
+    obj = user_obj.load_user_by_id(cursor, 2)
+    print(obj.__dict__)
+
+    obj = user_obj.load_all_users(cursor)
+    print([ob.__dict__ for ob in obj])
     cnx.close()
