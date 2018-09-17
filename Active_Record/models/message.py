@@ -55,3 +55,10 @@ class Message:
     def get_id(self):
         return self.__id
 
+    def delete(self, cursor):
+        sql = "DELETE FROM message WHERE id=%s"
+        cursor.execute(sql, (self.__id,))
+        self.__id = -1
+        cursor.close()
+        return True
+
