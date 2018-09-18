@@ -1,6 +1,7 @@
 from user import User
 from connect_db import create_connection
 from hash_password import generate_salt
+from message import Message
 
 if __name__ == '__main__':
     user_obj = User()
@@ -18,4 +19,9 @@ if __name__ == '__main__':
 
     obj = user_obj.load_all_users(cursor)
     print([ob.__dict__ for ob in obj])
+
+    a = Message.load_all_messages_for_user(cursor, 2)
+    for i in a:
+        print(i.text)
+
     cnx.close()
