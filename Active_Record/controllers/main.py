@@ -29,7 +29,7 @@ if __name__ == '__main__':
     a = message_obj.save_to_db(cursor)
 
     print('all user messages by user')
-    a = message_obj.load_all_messages_for_user(cursor, 1)
+    a = message_obj.load_all_messages_for_user(cursor, 1, 2)
     for i in a:
         print(i.__dict__)
 
