@@ -28,15 +28,15 @@ class User:
     def save_to_db(self, cursor):
         if self.__id == -1:
             # saving new instance using prepared statements
-            sql = """INSERT INTO Users(name, email, password)
-                     VALUES(%s, %s, %s) RETURNING id"""
+            sql = '''INSERT INTO Users(name, email, password)
+                     VALUES(%s, %s, %s) RETURNING id'''
             values = (self.username, self.email, self.hashed_password)
             cursor.execute(sql, values)
             self.__id = cursor.fetchone()[0]  # albo cursor.fetchone()['id']
             return True
         else:
-            sql = """UPDATE Users SET name=%s, email=%s, password=%s,
-                    WHERE id=%s"""
+            sql = '''UPDATE Users SET name=%s, email=%s, password=%s,
+                    WHERE id=%s'''
             values = (self.username, self.email, self.hashed_password, self.id)
             cursor.execute(sql, values)
             cursor.close()
@@ -75,7 +75,7 @@ class User:
         sql = "DELETE FROM Users WHERE id=%s"
         cursor.execute(sql, (self.__id,))
         self.__id = -1
-        cursor.close()
+        # cursor.close()
         return True
 
 
