@@ -15,7 +15,7 @@ class Message:
 
     @staticmethod
     def load_message_by_id(cursor, message_id):
-        sql = "SELECT id, from_id, to_id, creation_date, text FROM message WHERE id=%s"
+        sql = 'SELECT id, from_id, to_id, creation_date, text FROM message WHERE id=%s'
         cursor.execute(sql, (message_id,))  # (message_id, ) - bo tworzymy krotkę
         data = cursor.fetchone()
         if data:
@@ -30,9 +30,8 @@ class Message:
             return None
 
     @staticmethod
-    def load_all_messages_for_user(cursor, from_user_id, user_id):
-        sql = "SELECT id, from_id, to_id, text, creation_date FROM message WHERE from_id={} AND to_id={}".format(
-            from_user_id, user_id)
+    def load_all_messages_for_user(cursor, user_id):
+        sql = 'SELECT id, from_id, to_id, creation_date, text FROM message WHERE to_id=%s'
         result = []
         cursor.execute(sql, (user_id,))
         for row in cursor.fetchall():
@@ -40,14 +39,14 @@ class Message:
             loaded_message.__id = row[0]
             loaded_message.from_id = row[1]
             loaded_message.to_id = row[2]
-            loaded_message.text = row[3]
-            loaded_message.creation_date = row[4]
+            loaded_message.__creation_date = row[3]
+            loaded_message.text = row[4]
             result.append(loaded_message)
         return result
 
     @staticmethod
     def load_all_messages(cursor):
-        sql = "SELECT id, from_id, to_id, creation_date, text FROM message"
+        sql = 'SELECT id, from_id, to_id, creation_date, text FROM message'
         ret = []
         cursor.execute(sql)
         for row in cursor.fetchall():
@@ -60,16 +59,30 @@ class Message:
             ret.append(loaded_message)
         return ret
 
-    def save_to_db(self):
-        pass
+    def save_to_db(self, cursor):
+        if self.__id == -1:
+            # saving new instance using prepared statements
+            sql = '''INSERT INTO message(from_id, to_id, creation_date, text)
+                     VALUES(%s, %s, CURRENT_TIMESTAMP , %s) RETURNING id'''
+            values = (self.from_id, self.to_id, self.text)
+            cursor.execute(sql, values)
+            self.__id = cursor.fetchone()[0]  # albo cursor.fetchone()['id']
+            return True
+        else:
+            sql = '''UPDATE message SET from_id=%s, to_id=%s, creation_date=CURRENT_TIMESTAMP , text=%s,
+                    WHERE id=%s'''
+            values = (self.from_id, self.to_id, self.text, self.__id)
+            cursor.execute(sql, values)
+            cursor.close()
+            return True
 
     @property
     def get_id(self):
         return self.__id
 
     def delete(self, cursor):
-        sql = "DELETE FROM message WHERE id=%s"
+        sql = 'DELETE FROM message WHERE id=%s'
         cursor.execute(sql, (self.__id,))
         self.__id = -1
-        cursor.close()
+        # cursor.close()
         return True
