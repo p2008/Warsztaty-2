@@ -20,7 +20,7 @@ if __name__ == '__main__':
     obj = user_obj.load_all_users(cursor)
     print([ob.__dict__ for ob in obj])
 
-    a = Message.load_all_messages_for_user(cursor, 2)
+    a = Message.load_all_messages_for_user(cursor, 1, 2)
     for i in a:
         print(i.text)
 
