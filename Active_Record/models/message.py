@@ -59,8 +59,22 @@ class Message:
             ret.append(loaded_message)
         return ret
 
-    def save_to_db(self):
-        pass
+    def save_to_db(self, cursor):
+        if self.__id == -1:
+            # saving new instance using prepared statements
+            sql = """INSERT INTO message(from_id, to_id, creation_date, text)
+                     VALUES(%s, %s, CURRENT_TIMESTAMP , %s) RETURNING id"""
+            values = (self.from_id, self.to_id, self.text)
+            cursor.execute(sql, values)
+            self.__id = cursor.fetchone()[0]  # albo cursor.fetchone()['id']
+            return True
+        else:
+            sql = """UPDATE message SET from_id=%s, to_id=%s, creation_date=CURRENT_TIMESTAMP , text=%s,
+                    WHERE id=%s"""
+            values = (self.from_id, self.to_id, self.text, self.__id)
+            cursor.execute(sql, values)
+            cursor.close()
+            return True
 
     @property
     def get_id(self):
