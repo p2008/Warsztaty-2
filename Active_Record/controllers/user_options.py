@@ -1,7 +1,7 @@
 import argparse
 from controllers.connect_db import create_connection
 from models.user import User
-from controllers.hash_password import password_hash, check_password
+from controllers.hash_password import check_password
 
 
 def set_options():
@@ -13,7 +13,7 @@ def set_options():
     parser.add_argument("-d", "--delete", dest='delete', action='store_true', help="Delete user")
     parser.add_argument("-e", "--edit", dest='edit', action='store_true', default=False, help="Change user login")
 
-    options = parser.parse_args()
+    options, unknown = parser.parse_known_args()
     return options
 
 
@@ -64,22 +64,30 @@ def scenario(options):
         if user is not None:
             password = user.hashed_password
             if check_password(options.password, password):
-                user_delete = input( 'Użytkownik: {} o email: {} zostanie usunięty. Naciśnij t jeżeli się zgadzasz:'.format(user.username, user.email))
+                user_delete = input('Użytkownik: {} o email: {} zostanie usunięty. Naciśnij t jeżeli się zgadzasz:'.format(user.username, user.email))
                 if user_delete == 't':
+                    for key, value in user.__dict__.items():
+                        print('{}: {}'.format(key, value), end='\n')
                     user.delete(cursor)
                     print('R.I.P')
                 else:
                     print('Nadal żyw')
-        pass
 
     elif options.list:
-        pass
+        users_all = User().load_all_users(cursor)
+        for user in users_all:
+            for key, value in user.__dict__.items():
+                if key != '_User__hashed_password':
+                    key = 'User Id' if key == '_User__id' else key
+                    print('{}: {}'.format(key, value), end='\n')
+            print('\n')
+
     else:
-        pass
+
+        print('Podaj parametr -h lub --help by zobaczyć możliwe parametry')
 
     cursor.close()
     cnx.close()
-
 
 if __name__ == "__main__":
     scenario(set_options())
