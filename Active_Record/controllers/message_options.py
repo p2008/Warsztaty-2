@@ -7,11 +7,11 @@ from controllers.hash_password import check_password
 
 def set_options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-u", "--username", dest='username', help="User login")
-    parser.add_argument("-p", "--password", dest='password', help="User password")
-    parser.add_argument("-t", "--to", dest='to', help="Receiver of message email")
-    parser.add_argument("-l", "--list", dest='list', action='store_true', help="List all users")
-    parser.add_argument("-s", "--send", dest='send', help="write and send message")
+    parser.add_argument('-u', '--username', dest='username', help='User login')
+    parser.add_argument('-p', '--password', dest='password', help='User password')
+    parser.add_argument('-t', '--to', dest='to', help='Receiver of message email')
+    parser.add_argument('-l', '--list', dest='list', action='store_true', help='List all users')
+    parser.add_argument('-s', '--send', dest='send', help='write and send message')
 
     options, unknown = parser.parse_known_args()
     return options
@@ -57,12 +57,12 @@ def scenario(options):
                 print('Podane hasło jest błędne')
         else:
             if user is None:
-                print("Zły login, proszę podac wlasciwą nazwę użytkownika")
+                print('Zły login, proszę podac wlasciwą nazwę użytkownika')
             elif user_to is None:
-                print("Uzytkownik o podanym mailu nie istnieje")
+                print('Uzytkownik o podanym mailu nie istnieje')
 
     else:
-        print('Brak funkcjonalnosci dla podanych parametrów')
+        print('Brak funkcjonalności dla podanych parametrów')
 
     cursor.close()
     cnx.close()
