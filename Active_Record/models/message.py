@@ -30,9 +30,9 @@ class Message:
             return None
 
     @staticmethod
-    def load_all_messages_for_user(cursor, from_user_id, user_id):
-        sql = 'SELECT id, from_id, to_id, creation_date, text FROM message WHERE from_id={} AND to_id={}'.format(
-            from_user_id, user_id)
+    def load_all_messages_for_user(cursor, user_id):
+        sql = 'SELECT id, from_id, to_id, creation_date, text FROM message WHERE from_id={} ORDER BY creation_date DESC'.format(
+            user_id)
         result = []
         cursor.execute(sql, (user_id,))
         for row in cursor.fetchall():

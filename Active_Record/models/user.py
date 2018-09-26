@@ -85,6 +85,21 @@ class User:
         else:
             return None
 
+    @staticmethod
+    def load_user_by_mail(cursor, user_mail):
+        sql = "SELECT id, name, email, password FROM users WHERE email=%s"
+        cursor.execute(sql, (user_mail,))
+        data = cursor.fetchone()
+        if data:
+            loaded_user = User()
+            loaded_user.__id = data[0]
+            loaded_user.username = data[1]
+            loaded_user.email = data[2]
+            loaded_user.__hashed_password = data[3]
+            return loaded_user
+        else:
+            return None
+
     def delete(self, cursor):
         sql = "DELETE FROM Users WHERE id=%s"
         cursor.execute(sql, (self.__id,))
