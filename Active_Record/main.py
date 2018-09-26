@@ -1,7 +1,7 @@
 from controllers.connect_db import create_connection
 from models.message import Message
 from models.user import User
-from controllers.user_options import scenario, set_options
+
 
 if __name__ == '__main__':
 
@@ -56,4 +56,4 @@ if __name__ == '__main__':
     cursor.close()
     cnx.close()
 
-    scenario(set_options())
+
